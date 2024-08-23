@@ -150,7 +150,8 @@
 
                                     <div class="d-flex justify-content-between summery-end">
                                         <div class="h6"><strong>Discount</strong></div>
-                                        <div class="h6"><strong id="discount_value">${{  number_format($discount,2) }}</strong>
+                                        <div class="h6"><strong
+                                                id="discount_value">${{ number_format($discount, 2) }}</strong>
                                         </div>
                                     </div>
 
@@ -177,7 +178,7 @@
                                     name="discount">
                                 <button class="btn btn-dark" type="button" id="apply-discount">Apply Coupon</button>
                             </div>
-
+                            <p></p>
 
                             <div id="discount-wrapper">
                                 @if (Session::has('code'))
@@ -481,6 +482,10 @@
                         $("#totalShippingCharges").html("$" + response.totalShippingCharges);
                         $("#discount-wrapper").html(response.discountSection);
 
+                    } else {
+                        $("#discount-wrapper").html("<span class='text-danger'>"+response.message+"</span>");
+                       
+
                     }
                 }
             });
@@ -520,7 +525,7 @@
                         $("#discount").val("");
 
 
-                        
+
                     }
                 }
             });

@@ -266,6 +266,8 @@ class CartController extends Controller
 
 
 
+
+
     public function processCheckout(Request $request)
     {
 
@@ -444,6 +446,10 @@ class CartController extends Controller
 
 
 
+
+
+
+
     public function getOrderSummary(Request $request)
     {
         $subtotal = Cart::subtotal(2, '.', '');
@@ -560,7 +566,7 @@ class CartController extends Controller
             ]);
         }
 
-        // check if coupon code is expires or not---
+        // check if coupon code is expires or not-------
         $now = Carbon::now();
         if ($code->starts_at != "") {
             $startDate = Carbon::createFromFormat('Y-m-d H:i:s', $code->starts_at);
@@ -582,12 +588,91 @@ class CartController extends Controller
                 ]);
             }
         }
+        // check if coupon code is expires or not-------
+
+
+
+
+
+
+
+
+
+
+
+        // check Max uses-------------
+        if ($code->max_uses > 0) {
+            $couponUsed = Order::where("coupon_code_id", $code->id)->count();
+            // dd($coupondUsed);
+            if ($couponUsed >= $code->max_uses) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Discount coupon Empty..!!'
+                ]);
+            }
+        }
+        // check Max uses-------------
+
+
+
+
+
+
+
+
+
+        // check Max uses user-------------
+        if ($code->max_uses_user > 0) {
+
+            $maxUsesUser = order::where(["coupon_code_id" => $code->id, "user_id" => Auth::user()->id])->count();
+            if ($maxUsesUser >= $code->max_uses_user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Your quantity of used this coupon have been finished..!!'
+                ]);
+            }
+        }
+        // check Max uses user-------------
+
+
+
+
+
+
+
+
+
+
+        // check minimum amount-------------
+        $subtotal = Cart::subtotal(2, '.', '');
+
+        if ($code->min_amount > 0) {
+            if ($subtotal < $code->min_amount) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'You minimum amount must be $'.$code->min_amount
+                ]);
+            }
+        }
+        // check minimum amount-------------
+
+
+
+
+
+
+
+
+
+
+
+
+
         // save code in session---
         session()->put("code", $code);
 
         return $this->getOrderSummary($request);
     }
-
 
 
 
