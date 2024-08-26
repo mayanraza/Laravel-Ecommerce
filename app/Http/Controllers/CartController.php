@@ -223,7 +223,15 @@ class CartController extends Controller
 
         if ($customerAddress != "") {
             $userCountry = $customerAddress->country_id;
+            // dd($userCountry);
             $shippingCharges = Shipping::where("country_id", $userCountry)->first();
+
+
+            // If no shipping rate is found, use "rest_of_world" shipping rate
+            if (!$shippingCharges) {
+                $shippingCharges = Shipping::where("country_id", "rest_of_world")->first();
+            }
+
 
             $totalQty = 0;
             $grandTotal = 0;
@@ -315,9 +323,9 @@ class CartController extends Controller
         if ($request->payment_method == 'cod') {
             $order = new Order;
 
-            $discountCodeId = "";
+            $discountCodeId = NULL;
             $promoCode = "";
-
+            $discount = 0;
 
             $subtotal = Cart::subtotal(2, '.', '');
             $shipping = 0;
@@ -344,6 +352,12 @@ class CartController extends Controller
             $shipping = Shipping::where("country_id", $request->country)->first();
             // dd($shipping);
 
+            // If no shipping rate is found, use "rest_of_world" shipping rate
+            if (!$shipping) {
+                $shippingCharges = Shipping::where("country_id", "rest_of_world")->first();
+            }
+
+
             // if country rate set in admin panel----
             if ($shipping !== null) {
                 $shipping = $shipping->amount * (Cart::count());
@@ -366,6 +380,8 @@ class CartController extends Controller
             $order->subtotal = $subtotal;
             $order->shipping = $shipping;
             $order->grand_total = $grandTotal;
+            $order->payment_status = "Unpaid";
+            $order->status = 'pending';
             $order->user_id = $user->id;
             $order->first_name = $request->first_name;
             $order->last_name = $request->last_name;
@@ -650,7 +666,7 @@ class CartController extends Controller
             if ($subtotal < $code->min_amount) {
                 return response()->json([
                     'status' => false,
-                    'message' => 'You minimum amount must be $'.$code->min_amount
+                    'message' => 'You minimum amount must be $' . $code->min_amount
                 ]);
             }
         }

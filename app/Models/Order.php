@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
+
+
+
+    public function country(){
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+
+
+
+  
 }

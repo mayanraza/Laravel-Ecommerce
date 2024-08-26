@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -83,7 +85,7 @@ class AuthController extends Controller
 
 
 
-    
+
 
 
     public function processLogin(Request $request)
@@ -137,5 +139,44 @@ class AuthController extends Controller
             ->with("success", "You successfully Logged out..!!");
 
     }
+
+
+
+
+
+
+
+
+    public function Orders()
+    {
+        $user = Auth::user();
+        $order = Order::where("user_id", $user->id)->orderBy("created_at", "desc")->get();
+        return view("front.account.order", ["order" => $order]);
+    }
+
+
+
+
+
+
+
+
+    public function orderDetail($id)
+    {
+        $user = Auth::user();
+
+        $order = Order::where("user_id", $user->id)->where("id", $id)->first();
+
+        $orderItem = OrderItem::where("order_id", $order->id)->get();
+
+        return view("front.account.orderdetail", [
+            "order" => $order,
+            "orderItem" => $orderItem,
+        ]);
+    }
+
+
+
+
 
 }

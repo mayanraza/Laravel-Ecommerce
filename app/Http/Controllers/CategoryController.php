@@ -123,7 +123,7 @@ class CategoryController extends Controller
 
 
         if (empty($category)) {
-            $request->session()->flash("error","Category not found");
+            $request->session()->flash("error", "Category not found");
             return response()->json([
                 'status' => false,
                 'message' => 'Category not Found',
@@ -205,7 +205,7 @@ class CategoryController extends Controller
         $category = Category::find($categoryId);
 
         if (empty($category)) {
-            $request->session()->flash("error",'Category not found');
+            $request->session()->flash("error", 'Category not found');
             return response()->json([
                 'status' => true,
                 'message' => 'Category not found'
@@ -229,6 +229,6 @@ class CategoryController extends Controller
             'status' => true,
             'message' => 'Category deleted successfully'
         ]);
-        
+
     }
 }

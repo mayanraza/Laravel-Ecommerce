@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 
 use App\Http\Controllers\DiscountCouponController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProductSubCategoryController;
@@ -41,7 +42,7 @@ use Illuminate\Http\Request;
 
 
 
-
+// Admin-----------------------
 Route::group(["prefix" => "admin"], function () {
     Route::group(['middleware' => 'admin.guest'], function () {
         Route::get("/login", [AdminLoginController::class, "index"])->name('admin.login');
@@ -162,7 +163,21 @@ Route::group(["prefix" => "admin"], function () {
 
 
 
+
+
+    // orders-------------------------------
+    Route::get("/orders", [OrderController::class, "index"])->name('orders.index');
+    Route::get("/orders-details/{id}", [OrderController::class, "details"])->name('orders.details');
+
+
+    // orders-------------------------------
+
+
+
+
+
 });
+// Admin-----------------------
 
 
 
@@ -218,6 +233,11 @@ Route::group(["prefix" => "account"], function () {
     // Authorized User--------------------
     Route::group(["middleware" => "auth"], function () {
         Route::get('/profile', [AuthController::class, "profile"])->name('account.profile');
+        Route::get('/myOrders', [AuthController::class, "Orders"])->name('account.orders');
+        Route::get('/order-detail/{orderId}', [AuthController::class, "orderDetail"])->name('account.orderdetail');
+
+
+
         Route::get('/logout', [AuthController::class, "logout"])->name('account.logout');
     });
     // Authorized User--------------------
