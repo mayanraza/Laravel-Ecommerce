@@ -4,6 +4,9 @@
 @section('content')
     <section class="content-header">
         <div class="container-fluid my-2">
+
+            @include('admin.message')
+
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1>Order: #{{ $order->id }}</h1>
@@ -33,6 +36,14 @@
                                         Phone: {{ $order->mobile }}<br>
                                         Email: {{ $order->email }}
                                     </address>
+
+                                    <strong>Shipped Date</strong><br>
+                                    @if (!empty($order->shipped_date))
+                                        {{ \Carbon\Carbon::parse($order->shipped_date)->format('d M, Y') }}
+                                    @else
+                                        N/A
+                                    @endif
+
                                 </div>
 
 
@@ -44,11 +55,13 @@
                                     <b>Total:</b> ${{ number_format($order->grand_total, 2) }}<br>
                                     <b>Status:</b>
                                     @if ($order->status == 'pending')
-                                        <span class="text-danger">Pending</span>
+                                        <span class="badge bg-danger">Pending</span>
                                     @elseif($order->status == 'shipped')
-                                        <span class="text-info">Shipped</span>
+                                        <span class="badge bg-warning">Shipped</span>
+                                    @elseif($order->status == 'deliver')
+                                        <span class="badge bg-success">Delivered</span>
                                     @else
-                                        <span class="text-success">Delivered</span>
+                                        <span class="badge bg-dark">Cancelled</span>
                                     @endif
                                     <br>
 
@@ -103,23 +116,35 @@
                 </div>
                 <div class="col-md-3">
                     <div class="card">
-                        <div class="card-body">
-                            <h2 class="h4 mb-3">Order Status</h2>
-                            <div class="mb-3">
-                                <select name="status" id="status" class="form-control">
-                                    <option {{ $order->status == 'pending' ? 'selected' : '' }} value="pending">Pending
-                                    </option>
-                                    <option {{ $order->status == 'shipped' ? 'selected' : '' }} value="shipped">Shipped
-                                    </option>
-                                    <option {{ $order->status == 'deliver' ? 'selected' : '' }} value="deliver">Delivered
-                                    </option>
-                                    {{-- <option value="">Cancelled</option> --}}
-                                </select>
+                        <form action="" method="POST" name="changeOrderStatusForm" id="changeOrderStatusForm">
+                            <div class="card-body">
+                                <h2 class="h4 mb-3">Order Status</h2>
+                                <div class="mb-3">
+                                    <select name="status" id="status" class="form-control">
+                                        <option {{ $order->status == 'pending' ? 'selected' : '' }} value="pending">Pending
+                                        </option>
+                                        <option {{ $order->status == 'shipped' ? 'selected' : '' }} value="shipped">Shipped
+                                        </option>
+                                        <option {{ $order->status == 'deliver' ? 'selected' : '' }} value="deliver">
+                                            Delivered
+                                        </option>
+                                        <option {{ $order->status == 'cancelled' ? 'selected' : '' }} value="cancelled">
+                                            Cancelled</option>
+                                    </select>
+                                </div>
+
+
+                                <div class="mb-3">
+                                    <label for="">Shipped Date</label>
+                                    <input placeholder="Shipped Date" type="text" name="shipped_date" id="shipped_date"
+                                        class="form-control" value="{{ $order->shipped_date }}">
+                                </div>
+
+                                <div class="mb-3">
+                                    <button class="btn btn-primary">Update</button>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <button class="btn btn-primary">Update</button>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -140,4 +165,48 @@
         </div>
         <!-- /.card -->
     </section>
+@endsection
+
+
+@section('customjs')
+    <script>
+        $("#changeOrderStatusForm").submit(function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '{{ route('orders.changeOrderStatus', $order->id) }}',
+                type: "post",
+                data: $(this).serializeArray(),
+                dataType: 'json',
+                success: function(response) {
+                    window.location.href = '{{ route('orders.details', $order->id) }}';
+                }
+            })
+
+
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // daate time picker-------------
+        $(document).ready(function() {
+            $('#shipped_date').datetimepicker({
+                // options here
+                format: 'Y-m-d H:i:s',
+            });
+        });
+
+
+        // daate time picker-------------
+    </script>
 @endsection

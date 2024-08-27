@@ -30,6 +30,15 @@ class OrderController extends Controller
     }
 
 
+
+
+
+
+
+
+
+
+
     public function details(Request $request, $id)
     {
         $order = Order::with("country")->where("id", $id)->first();
@@ -44,5 +53,40 @@ class OrderController extends Controller
         ]);
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public function changeOrderStatus(Request $request, $id)
+    {
+        $order = Order::find($id);
+
+        $order->status = $request->status;
+        $order->shipped_date = $request->shipped_date;
+
+        $order->save();
+
+        session()->flash("success", "Order status updated successfully..!!");
+
+        return response()->json([
+            'status' => true,
+            'message' => "Order status updated successfully..!!",
+
+
+        ]);
+
+    }
+
+
+
 
 }

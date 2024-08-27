@@ -168,6 +168,7 @@ Route::group(["prefix" => "admin"], function () {
     // orders-------------------------------
     Route::get("/orders", [OrderController::class, "index"])->name('orders.index');
     Route::get("/orders-details/{id}", [OrderController::class, "details"])->name('orders.details');
+    Route::post("/order/change-status/{id}", [OrderController::class, "changeOrderStatus"])->name('orders.changeOrderStatus');
 
 
     // orders-------------------------------
