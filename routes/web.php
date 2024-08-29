@@ -19,6 +19,7 @@ use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TempImagesController;
+use App\Http\Controllers\wishlistController;
 use App\Models\DiscountCoupon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Route;
@@ -169,8 +170,7 @@ Route::group(["prefix" => "admin"], function () {
     Route::get("/orders", [OrderController::class, "index"])->name('orders.index');
     Route::get("/orders-details/{id}", [OrderController::class, "details"])->name('orders.details');
     Route::post("/order/change-status/{id}", [OrderController::class, "changeOrderStatus"])->name('orders.changeOrderStatus');
-
-
+    Route::post("/order/send_mail/{id}", [OrderController::class, "sendInvoiceEmail"])->name('orders.sendMail');
     // orders-------------------------------
 
 
@@ -179,6 +179,7 @@ Route::group(["prefix" => "admin"], function () {
 
 });
 // Admin-----------------------
+
 
 
 
@@ -236,23 +237,18 @@ Route::group(["prefix" => "account"], function () {
         Route::get('/profile', [AuthController::class, "profile"])->name('account.profile');
         Route::get('/myOrders', [AuthController::class, "Orders"])->name('account.orders');
         Route::get('/order-detail/{orderId}', [AuthController::class, "orderDetail"])->name('account.orderdetail');
+        Route::get('/wishlist', [wishlistController::class, "index"])->name('account.wishlist');
 
 
-
+        // logout-------------------
         Route::get('/logout', [AuthController::class, "logout"])->name('account.logout');
+        // logout-------------------
+
     });
     // Authorized User--------------------
-
 });
 // user registration/login/logout/profile---------
 
-
-
-
-
-
-
-// Front---------------
 
 
 

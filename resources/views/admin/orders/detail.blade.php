@@ -148,16 +148,18 @@
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <h2 class="h4 mb-3">Send Inovice Email</h2>
-                            <div class="mb-3">
-                                <select name="status" id="status" class="form-control">
-                                    <option value="">Customer</option>
-                                    <option value="">Admin</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <button class="btn btn-primary">Send</button>
-                            </div>
+                            <form action="" method="POST" id="sendInvoiceMail" name="sendInvoiceMail">
+                                <h2 class="h4 mb-3">Send Inovice Email</h2>
+                                <div class="mb-3">
+                                    <select name="userType" id="userType" class="form-control">
+                                        <option value="customer">Customer</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <button type="submit" class="btn btn-primary">Send</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -170,25 +172,51 @@
 
 @section('customjs')
     <script>
+        // order status change---------------
         $("#changeOrderStatusForm").submit(function(event) {
             event.preventDefault();
+            if (confirm("Are you want to Update Shipping status and date..?")) {
 
-            $.ajax({
-                url: '{{ route('orders.changeOrderStatus', $order->id) }}',
-                type: "post",
-                data: $(this).serializeArray(),
-                dataType: 'json',
-                success: function(response) {
-                    window.location.href = '{{ route('orders.details', $order->id) }}';
-                }
-            })
-
+                $.ajax({
+                    url: '{{ route('orders.changeOrderStatus', $order->id) }}',
+                    type: "post",
+                    data: $(this).serializeArray(),
+                    dataType: 'json',
+                    success: function(response) {
+                        window.location.href = '{{ route('orders.details', $order->id) }}';
+                    }
+                })
+            }
 
         })
+        // order status change---------------
 
 
 
 
+
+
+
+
+
+
+
+        // order  email sent---------------
+        $("#sendInvoiceMail").submit(function(event) {
+            event.preventDefault();
+            if (confirm("Are you want to send email..?")) {
+                $.ajax({
+                    url: '{{ route('orders.sendMail', $order->id) }}',
+                    type: "post",
+                    data: $(this).serializeArray(),
+                    dataType: 'json',
+                    success: function(response) {
+                        window.location.href = '{{ route('orders.details', $order->id) }}';
+                    }
+                })
+            }
+        })
+        // order  email sent---------------
 
 
 

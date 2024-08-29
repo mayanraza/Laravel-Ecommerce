@@ -26,4 +26,11 @@ class FrontController extends Controller
             "latestProduct" => $latestProduct
         ]);
     }
+
+
+
+    public function addToWishlist(Request $request)
+    {
+
+    }
 }

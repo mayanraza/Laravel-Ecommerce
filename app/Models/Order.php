@@ -11,11 +11,18 @@ class Order extends Model
 
 
 
-    public function country(){
+    public function country()
+    {
         return $this->belongsTo(Country::class, 'country_id');
     }
 
 
 
-  
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+
+
 }

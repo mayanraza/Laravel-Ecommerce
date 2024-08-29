@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en_AU" />
+
+<html class="no-js" lang="en_AU">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -51,6 +52,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="#" />
 </head>
 
+
+
+
 <body data-instant-intensity="mousedown">
 
     <div class="bg-light top-header">
@@ -63,16 +67,14 @@
                     </a>
                 </div>
                 <div class="col-lg-6 col-6 text-left  d-flex justify-content-end align-items-center">
-                    
+
                     @if (Auth::check())
-                    <a href="{{route("account.profile")}}" class="nav-link text-dark">My Account</a>
-
-                        @else
-                    <a href="{{route("account.login")}}" class="nav-link text-dark">Login/Registration</a>
-
+                        <a href="{{ route('account.profile') }}" class="nav-link text-dark">My Account</a>
+                    @else
+                        <a href="{{ route('account.login') }}" class="nav-link text-dark">Login/Registration</a>
                     @endif
-                  
-                  
+
+
                     <form action="">
                         <div class="input-group">
                             <input type="text" placeholder="Search For Products" class="form-control"
@@ -103,8 +105,8 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <!-- <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="index.php" title="Products">Home</a>
-        </li> -->
+              <a class="nav-link active" aria-current="page" href="index.php" title="Products">Home</a>
+            </li> -->
 
                         @if (getCategories()->isNotEmpty())
                             @foreach (getCategories() as $item)
@@ -231,6 +233,14 @@
 
 
 
+
+
+
+
+
+
+
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -242,4 +252,5 @@
 
 
 </body>
+
 </html>

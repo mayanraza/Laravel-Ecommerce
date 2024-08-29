@@ -413,6 +413,14 @@ class CartController extends Controller
                 $orderItem->save();
             }
 
+
+            // send order Email--------
+            orderEmail($order->id,'customer');
+            // send order Email--------
+
+
+
+
             session()->flash("success", "You have successfully places your order..!!");
 
             // Make Cart empty---
@@ -434,6 +442,11 @@ class CartController extends Controller
 
 
     }
+
+
+
+
+
 
 
 
