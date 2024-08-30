@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
+use App\Models\wishlist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -178,5 +179,53 @@ class AuthController extends Controller
 
 
 
+
+
+
+    public function wishlist()
+    {
+
+        $wishlist = wishlist::where("user_id", Auth::user()->id)->with("product")->get();
+        // dd($wishlist);
+        return view("front.account.wishlist", ["wishlist" => $wishlist]);
+
+    }
+
+
+
+
+
+
+
+
+
+    
+    public function removeProductFromWishlist(Request $request)
+    {
+
+        $wishlist = wishlist::where("user_id", Auth::user()->id)->where("product_id", $request->id)->first();
+
+
+
+        if ($wishlist == null) {
+            session()->flash("error", "Product not found..!!");
+
+            return response()->json([
+                "status" => false,
+                'message' => 'Product not found in wishlist'
+            ]);
+        } else {
+            $wishlist->delete();
+
+            session()->flash("success", "Product removed from wishlist successfully!");
+            return response()->json([
+                "status" => true,
+                'message' => 'Product successfully removed from wishlist'
+            ]);
+        }
+
+
+
+    }
 
 }

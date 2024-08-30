@@ -149,10 +149,12 @@
                                                 @endif
 
                                             </a>
-                                            <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
+                                            <a class="whishlist" onclick="addToWishlist({{ $item->id }})"
+                                                href="javascript:void(0)"><i class="far fa-heart"></i></a>
 
                                             <div class="product-action">
-                                                <a class="btn btn-dark" href="javascript:void(0)" onclick="addToCart({{$item->id}})">
+                                                <a class="btn btn-dark" href="javascript:void(0)"
+                                                    onclick="addToCart({{ $item->id }})">
                                                     <i class="fa fa-shopping-cart"></i> Add To Cart
                                                 </a>
                                             </div>
@@ -183,6 +185,16 @@
             </div>
         </div>
     </section>
+
+
+
+
+  
+
+
+
+
+
 @endsection
 
 @section('customJs')
@@ -289,5 +301,21 @@
             })
         }
         // add to cart---------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </script>
 @endsection

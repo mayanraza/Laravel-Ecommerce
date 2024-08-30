@@ -215,6 +215,9 @@ Route::post('/apply-discount', [CartController::class, "applyDiscount"])->name('
 // remove discount-----
 Route::post('/remove-discount', [CartController::class, "removeCoupon"])->name('front.remove_coupon');
 // remove discount-----
+// wishlist------------
+Route::get('/aad-to-wishlist', [FrontController::class, "addToWishlist"])->name('front.wishlist');
+// wishlist------------
 
 
 
@@ -237,7 +240,8 @@ Route::group(["prefix" => "account"], function () {
         Route::get('/profile', [AuthController::class, "profile"])->name('account.profile');
         Route::get('/myOrders', [AuthController::class, "Orders"])->name('account.orders');
         Route::get('/order-detail/{orderId}', [AuthController::class, "orderDetail"])->name('account.orderdetail');
-        Route::get('/wishlist', [wishlistController::class, "index"])->name('account.wishlist');
+        Route::get('/wishlist', [AuthController::class, "wishlist"])->name('account.wishlist');
+        Route::post('/remove-product-from-wishlist', [AuthController::class, "removeProductFromWishlist"])->name('account.productRemoveFromWishlist');
 
 
         // logout-------------------

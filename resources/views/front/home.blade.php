@@ -152,7 +152,9 @@
                                             src="{{ asset('uploads/product/small/' . $item->product_images->first()->image) }}"
                                             alt="">
                                     </a>
-                                    <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
+                                    <a onclick="addToWishlist({{ $item->id }})" class="whishlist"
+                                        href="javascript:void(0)"><i class="far fa-heart"></i></a>
+
 
                                     <div class="product-action">
                                         <a class="btn btn-dark" href="javascript:void(0)"
@@ -201,7 +203,8 @@
                                         @endif
 
                                     </a>
-                                    <a class="whishlist" href="222"><i class="far fa-heart"></i></a>
+                                    <a onclick="addToWishlist({{ $item->id }})" class="whishlist"
+                                        href="javascript:void(0)"><i class="far fa-heart"></i></a>
 
                                     <div class="product-action">
                                         <a class="btn btn-dark" href="javascript:void(0)"
@@ -226,13 +229,15 @@
             </div>
 
         </div>
+
+        
+
     </section>
 @endsection
 
 @section('customJs')
     <script type="text/javascript">
-
-    // addToCart------------------
+        // addToCart------------------
         function addToCart(id) {
             $.ajax({
                 url: '{{ route('front.addToCart') }}',
@@ -251,7 +256,7 @@
 
             })
         }
-    // addToCart------------------
+        // addToCart------------------
 
 
 
@@ -261,25 +266,6 @@
 
 
 
-        // addToWishlist-------------------
-        function addToWishlist() {
-            $.ajax({
-                url: '{{ route('account.wishlist') }}',
-                type: "post",
-                data: {
-                    id: id
-                },
-                dataType: "json",
-                success: function(response) {
-                    if (response.status == true) {
-                        window.location.href = "{{ route('front.cart') }}"
-                    } else {
-                        alert(response.message)
-                    }
-                }
-
-            })
-        }
-        // addToWishlist-------------------
+       
     </script>
 @endsection
