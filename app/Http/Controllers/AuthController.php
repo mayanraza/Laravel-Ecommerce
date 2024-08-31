@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Country;
+use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
@@ -123,10 +125,127 @@ class AuthController extends Controller
 
 
 
+
+
+
+
+
     public function profile()
     {
-        return view("front.account.profile");
+        $users = User::where("id", Auth::user()->id)->first();
+        $country = Country::orderBy("name", "asc")->get();
+        $customerAddress = CustomerAddress::where("user_id", Auth::user()->id)->first();
+        // dd($customerAddress);
+        return view("front.account.profile", [
+            "users" => $users,
+            "country" => $country,
+            "customerAddress" => $customerAddress
+        ]);
+
     }
+
+
+
+    public function updateProfile(Request $request)
+    {
+
+
+
+        $userId = Auth::user()->id;
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $userId . 'id',
+            'phone' => 'required',
+        ]);
+
+
+        if ($validator->passes()) {
+            $user = User::find($userId);
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->save();
+
+            session()->flash("success", 'Profile updated successfully..!!');
+
+            return response()->json([
+                'status' => true,
+                'message' => "Profile updated successfully..!!"
+            ]);
+
+
+        } else {
+            return response()->json([
+                'status' => false,
+                'error' => $validator->errors()
+            ]);
+        }
+
+    }
+
+
+
+
+
+    public function updateAddress(Request $request)
+    {
+        $userId = Auth::user()->id;
+        $validate = Validator::make($request->all(), [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|email',
+            'address' => 'required',
+            'country' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip' => 'required',
+            'mobile' => 'required',
+            'apartment' => "required"
+        ]);
+
+
+        if ($validate->passes()) {
+            CustomerAddress::updateOrCreate(
+                ['user_id' => $userId],
+                [
+                    'user_id' => $userId,
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
+                    'email' => $request->email,
+                    'country_id' => $request->country,
+                    'address' => $request->address,
+                    'apartment' => $request->apartment,
+                    'city' => $request->city,
+                    'state' => $request->first_name,
+                    'zip' => $request->zip,
+                    'mobile' => $request->mobile,
+                ]
+            );
+
+            session()->flash("success", 'Customer Address updated successfully..!!');
+
+            return response()->json([
+                'status' => true,
+                'message' => "Customer Address updated successfully..!!"
+            ]);
+
+
+        } else {
+            return response()->json([
+                'status' => false,
+                'error' => $validate->errors()
+            ]);
+        }
+    }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -199,7 +318,7 @@ class AuthController extends Controller
 
 
 
-    
+
     public function removeProductFromWishlist(Request $request)
     {
 

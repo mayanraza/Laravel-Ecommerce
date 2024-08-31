@@ -245,6 +245,8 @@ Route::group(["prefix" => "account"], function () {
         Route::get('/order-detail/{orderId}', [AuthController::class, "orderDetail"])->name('account.orderdetail');
         Route::get('/wishlist', [AuthController::class, "wishlist"])->name('account.wishlist');
         Route::post('/remove-product-from-wishlist', [AuthController::class, "removeProductFromWishlist"])->name('account.productRemoveFromWishlist');
+        Route::post('/updateProfile', [AuthController::class, "updateProfile"])->name('account.updateProfile');
+        Route::post('/updateAddress', [AuthController::class, "updateAddress"])->name('account.updateAddress');
 
 
         // logout-------------------
