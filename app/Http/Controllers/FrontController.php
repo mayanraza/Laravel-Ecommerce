@@ -18,7 +18,7 @@ class FrontController extends Controller
             ->take(8)
             ->get();
 
-        $latestProduct = Product::orderBy('id', "Desc")
+        $latestProduct = Product::orderBy('id', "ASC")
             ->where('status', 1)
             ->take(8)
             ->get();

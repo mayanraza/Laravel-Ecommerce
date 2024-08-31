@@ -65,6 +65,29 @@ class ShopController extends Controller
         // apply price range Filter her-------------
 
 
+
+
+
+
+        // home page search-------------
+        if (!empty($request->search)) {
+            $product = Product::where("title", "like", "%" . $request->search . "%");
+
+        }
+
+        // home page search-------------
+
+
+
+
+
+
+
+
+
+
+
+
         // apply price dropdown Filter her-------------
         if ($request->get("sort") != "") {
             if ($request->get("sort") == 'latest') {
@@ -123,6 +146,7 @@ class ShopController extends Controller
         if ($product->related_products != "") {
             $productArray = explode(",", $product->related_products);
             $relatedProduct = Product::whereIn("id", $productArray)
+                ->where("status", 1)
                 ->with("product_images")
                 ->get();
         }

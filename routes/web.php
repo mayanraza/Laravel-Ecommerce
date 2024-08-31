@@ -218,6 +218,9 @@ Route::post('/remove-discount', [CartController::class, "removeCoupon"])->name('
 // wishlist------------
 Route::get('/aad-to-wishlist', [FrontController::class, "addToWishlist"])->name('front.wishlist');
 // wishlist------------
+// home search-----------
+// home search-----------
+
 
 
 
@@ -255,6 +258,7 @@ Route::group(["prefix" => "account"], function () {
 
 
 
+// Front---------------
 
 
 

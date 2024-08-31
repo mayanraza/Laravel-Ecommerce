@@ -75,15 +75,19 @@
                     @endif
 
 
-                    <form action="">
+                    {{-- search-------------- --}}
+                    <form action="{{route("front.shop")}}" method="put">
                         <div class="input-group">
-                            <input type="text" placeholder="Search For Products" class="form-control"
-                                aria-label="Amount (to the nearest dollar)">
-                            <span class="input-group-text">
+                            <input type="text" placeholder="Search For Products" class="form-control" id="search" name="search" value="{{request()->get("search")}}">
+                            <button type="submit" class="input-group-text">
                                 <i class="fa fa-search"></i>
-                            </span>
+                            </button>
                         </div>
                     </form>
+                    {{-- search-------------- --}}
+
+
+
                 </div>
             </div>
         </div>
@@ -285,8 +289,8 @@
 
 
 
- // addToWishlist-------------------
- function addToWishlist(id) {
+        // addToWishlist-------------------
+        function addToWishlist(id) {
             $.ajax({
                 url: '{{ route('front.wishlist') }}',
                 type: "get",
@@ -308,11 +312,6 @@
             })
         }
         // addToWishlist-------------------
-
-
-
-
-
     </script>
 
     @yield('customJs')

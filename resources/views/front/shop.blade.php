@@ -153,10 +153,23 @@
                                                 href="javascript:void(0)"><i class="far fa-heart"></i></a>
 
                                             <div class="product-action">
-                                                <a class="btn btn-dark" href="javascript:void(0)"
-                                                    onclick="addToCart({{ $item->id }})">
-                                                    <i class="fa fa-shopping-cart"></i> Add To Cart
-                                                </a>
+                                                @if ($item->track_qty == 'Yes')
+                                                    @if ($item->qty > 0)
+                                                        <a class="btn btn-dark" href="javascript:void(0)"
+                                                            onclick="addToCart({{ $item->id }})">
+                                                            <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                        </a>
+                                                    @else
+                                                        <a class="btn btn-dark" href="javascript:void(0)">
+                                                            <i class="fa fa-shopping-cart"></i> Out of Stock
+                                                        </a>
+                                                    @endif
+                                                @else
+                                                    <a class="btn btn-dark" href="javascript:void(0)"
+                                                        onclick="addToCart({{ $item->id }})">
+                                                        <i class="fa fa-shopping-cart"></i> Add To Cart
+                                                    </a>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="card-body text-center mt-3">
@@ -189,7 +202,7 @@
 
 
 
-  
+
 
 
 
@@ -266,6 +279,16 @@
             url += '&sort=' + $("#sort").val();
 
 
+
+            var keyword = $("#search").val()
+            if (keyword.length > 0) {
+                url += '&search=' + keyword;
+
+            }
+
+
+
+
             window.location.href = url
         }
         // brand filter -----
@@ -301,21 +324,5 @@
             })
         }
         // add to cart---------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </script>
 @endsection
