@@ -411,6 +411,8 @@
         });
 
 
+
+
         // delete image-------
         function deleteImage(id) {
             $("#image-row-" + id).remove()

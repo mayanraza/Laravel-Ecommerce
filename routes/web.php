@@ -12,6 +12,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiscountCouponController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProductSubCategoryController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\TempImagesController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\wishlistController;
 use App\Models\DiscountCoupon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -173,6 +175,35 @@ Route::group(["prefix" => "admin"], function () {
     Route::post("/order/send_mail/{id}", [OrderController::class, "sendInvoiceEmail"])->name('orders.sendMail');
     // orders-------------------------------
 
+
+
+
+
+
+
+    // users Module--------------------
+    Route::get("/users", [UserController::class, "index"])->name('users.index');
+    Route::get("/users/create", [UserController::class, "create"])->name('users.create');
+    Route::post("/users", [UserController::class, "store"])->name('users.store');
+    Route::get("/users/{user}/edit", [UserController::class, "edit"])->name('users.edit');
+    Route::put("/users/{user}", [UserController::class, "update"])->name('users.update');
+    Route::delete("/users/{user}", [UserController::class, "destroy"])->name('users.delete');
+    // users Module--------------------
+
+
+
+
+
+
+
+    // pages Module--------------------
+    Route::get("/pages", [PageController::class, "index"])->name('pages.index');
+    Route::get("/pages/create", [PageController::class, "create"])->name('pages.create');
+     Route::post("/pages", [PageController::class, "store"])->name('pages.store');
+     Route::get("/pages/{page}/edit", [PageController::class, "edit"])->name('pages.edit');
+     Route::put("/pages/{page}", [PageController::class, "update"])->name('pages.update');
+     Route::delete("/pages/{page}", [PageController::class, "destroy"])->name('pages.delete');
+    // pages Module--------------------
 
 
 
