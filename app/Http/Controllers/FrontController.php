@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Page;
 use App\Models\Product;
 use App\Models\wishlist;
 use Auth;
@@ -23,11 +24,17 @@ class FrontController extends Controller
             ->take(8)
             ->get();
 
+
         return view('front.home', [
             "product" => $product,
             "latestProduct" => $latestProduct
         ]);
     }
+
+
+
+
+
 
 
     public function addToWishlist(Request $request)
@@ -88,4 +95,27 @@ class FrontController extends Controller
         ]);
 
     }
+
+
+
+
+
+
+
+
+
+    public function page($slug)
+    {
+
+
+        $page = Page::where("slug", $slug)->first();
+
+
+        if ($page == null) {
+            abort(404);
+        }
+        // dd($page);
+        return view("front.page", ["page" => $page]);
+    }
+
 }

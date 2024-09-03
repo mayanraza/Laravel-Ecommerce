@@ -76,9 +76,10 @@
 
 
                     {{-- search-------------- --}}
-                    <form action="{{route("front.shop")}}" method="put">
+                    <form action="{{ route('front.shop') }}" method="put">
                         <div class="input-group">
-                            <input type="text" placeholder="Search For Products" class="form-control" id="search" name="search" value="{{request()->get("search")}}">
+                            <input type="text" placeholder="Search For Products" class="form-control" id="search"
+                                name="search" value="{{ request()->get('search') }}">
                             <button type="submit" class="input-group-text">
                                 <i class="fa fa-search"></i>
                             </button>
@@ -175,11 +176,13 @@
                     <div class="footer-card">
                         <h3>Important Links</h3>
                         <ul>
-                            <li><a href="about-us.php" title="About">About</a></li>
-                            <li><a href="contact-us.php" title="Contact Us">Contact Us</a></li>
-                            <li><a href="#" title="Privacy">Privacy</a></li>
-                            <li><a href="#" title="Privacy">Terms & Conditions</a></li>
-                            <li><a href="#" title="Privacy">Refund Policy</a></li>
+
+                            @if (footerPages()->isNotEmpty())
+                                @foreach (footerPages() as $item)
+                                    <li><a href="{{ route('front.page', $item->slug) }}"
+                                            title="{{ $item->name }}">{{ $item->name }}</a></li>
+                                @endforeach
+                            @endif
                         </ul>
                     </div>
                 </div>

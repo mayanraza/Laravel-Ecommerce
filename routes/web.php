@@ -16,6 +16,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProductSubCategoryController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SubCategoryController;
@@ -199,12 +200,25 @@ Route::group(["prefix" => "admin"], function () {
     // pages Module--------------------
     Route::get("/pages", [PageController::class, "index"])->name('pages.index');
     Route::get("/pages/create", [PageController::class, "create"])->name('pages.create');
-     Route::post("/pages", [PageController::class, "store"])->name('pages.store');
-     Route::get("/pages/{page}/edit", [PageController::class, "edit"])->name('pages.edit');
-     Route::put("/pages/{page}", [PageController::class, "update"])->name('pages.update');
-     Route::delete("/pages/{page}", [PageController::class, "destroy"])->name('pages.delete');
+    Route::post("/pages", [PageController::class, "store"])->name('pages.store');
+    Route::get("/pages/{page}/edit", [PageController::class, "edit"])->name('pages.edit');
+    Route::put("/pages/{page}", [PageController::class, "update"])->name('pages.update');
+    Route::delete("/pages/{page}", [PageController::class, "destroy"])->name('pages.delete');
     // pages Module--------------------
 
+
+
+
+
+
+
+
+// setting Module--------------
+    Route::get("/showchangepassword", [SettingController::class, "showChangePassword"])->name('setting.showChangePassword');
+    Route::post("/ChangePassword", [SettingController::class, "ChangePassword"])->name('setting.ChangePassword');
+
+
+// setting Module--------------
 
 
 
@@ -249,8 +263,9 @@ Route::post('/remove-discount', [CartController::class, "removeCoupon"])->name('
 // wishlist------------
 Route::get('/aad-to-wishlist', [FrontController::class, "addToWishlist"])->name('front.wishlist');
 // wishlist------------
-// home search-----------
-// home search-----------
+// Pages-----------
+Route::get('/page/{slug}', [FrontController::class, "page"])->name('front.page');
+// Pages-----------
 
 
 
@@ -278,7 +293,12 @@ Route::group(["prefix" => "account"], function () {
         Route::post('/remove-product-from-wishlist', [AuthController::class, "removeProductFromWishlist"])->name('account.productRemoveFromWishlist');
         Route::post('/updateProfile', [AuthController::class, "updateProfile"])->name('account.updateProfile');
         Route::post('/updateAddress', [AuthController::class, "updateAddress"])->name('account.updateAddress');
-
+        
+        
+        // change passsword----------
+        Route::get('/change-password', [AuthController::class, "changePasswordIndex"])->name('account.changePassword');
+        Route::post('/change-password-store', [AuthController::class, "changePassword"])->name('account.changePasswordStore');
+        // change passsword----------
 
         // logout-------------------
         Route::get('/logout', [AuthController::class, "logout"])->name('account.logout');
