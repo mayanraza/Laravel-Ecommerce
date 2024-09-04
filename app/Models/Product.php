@@ -13,4 +13,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductImage::class);
     }
+
+
+    public function product_ratings()
+    {
+        return $this->hasMany(ProductRating::class)->where("status","1");
+    }
 }

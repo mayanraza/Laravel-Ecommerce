@@ -231,6 +231,30 @@ Route::group(["prefix" => "admin"], function () {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Front---------------
 Route::get('/', [FrontController::class, "index"])->name('front.home');
 Route::get('/shop/{categorySlug?}/{subCategorySlug?}', [ShopController::class, "index"])->name('front.shop');
@@ -266,6 +290,20 @@ Route::get('/aad-to-wishlist', [FrontController::class, "addToWishlist"])->name(
 // Pages-----------
 Route::get('/page/{slug}', [FrontController::class, "page"])->name('front.page');
 // Pages-----------
+// contactEmailForm-----------
+Route::post('/contactform', [FrontController::class, "sendContactEmail"])->name('front.contactform');
+// contactEmailForm-----------
+// forgot password----------
+Route::get('/forgotpassword', [AuthController::class, "forgotPasswordIndex"])->name('front.forgotpassword');
+Route::post('/processforgotpassword', [AuthController::class, "ProcessforgotPassword"])->name('front.processforgotpassword');
+Route::get('/resetpassword/{token}', [AuthController::class, "resetPassword"])->name('front.resetPassword');
+Route::post('/processResetPassword', [AuthController::class, "processResetPassword"])->name('front.processResetPassword');
+// forgot password----------
+// product rating---------
+Route::post('/productrating/{productId}', [ShopController::class, "productRating"])->name('front.productrating');
+// product rating---------
+
+
 
 
 

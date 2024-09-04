@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductRating;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use Validator;
 
 class ShopController extends Controller
 {
@@ -136,8 +138,14 @@ class ShopController extends Controller
     {
 
         $product = Product::where("slug", $slug)
-            ->with("product_images")
+            ->withCount("product_ratings")
+            ->withSum("product_ratings","rating")
+            ->with("product_images","product_ratings")
             ->first();
+
+        // dd($product);
+
+
         if ($product == null) {
             abort(404);
         }
@@ -159,6 +167,64 @@ class ShopController extends Controller
         ]);
 
     }
+
+
+
+
+
+
+
+    public function productRating(Request $request, $id)
+    {
+
+        $validator = Validator::make($request->all(), [
+            "username" => 'required',
+            "email" => 'required|email',
+            "rating" => 'required',
+            "comment" => 'required',
+        ]);
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => false,
+                "errors" => $validator->errors()
+            ]);
+        }
+
+
+        $count = ProductRating::where("email", $request->email)->count();
+
+        if ($count > 0) {
+            session()->flash("error", "You already rated thid product..!!");
+
+            return response()->json([
+                "status" => true,
+            ]);
+        }
+
+        $productRating = new ProductRating();
+        $productRating->product_id = $id;
+        $productRating->username = $request->username;
+        $productRating->email = $request->email;
+        $productRating->rating = $request->rating;
+        $productRating->comment = $request->comment;
+        $productRating->status = 0;
+
+        $productRating->save();
+
+
+        session()->flash("success", "Review submitted successfully..!!");
+
+        return response()->json([
+            "status" => true,
+            "errors" => "Review submitted successfully..!!"
+        ]);
+
+
+    }
+
+
 
 
 

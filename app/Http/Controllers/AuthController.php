@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ResetPasswordEmail;
 use App\Models\Country;
 use App\Models\CustomerAddress;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
 use App\Models\wishlist;
+use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Http\Request;
+use Mail;
+use Str;
 
 class AuthController extends Controller
 {
@@ -364,6 +368,10 @@ class AuthController extends Controller
 
 
 
+
+
+
+
     public function changePassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -414,6 +422,134 @@ class AuthController extends Controller
 
 
 
+    }
+
+
+
+
+
+
+
+
+
+    public function forgotPasswordIndex(Request $request)
+    {
+        return view("front.account.forgotPassword");
+    }
+
+
+
+
+
+
+
+
+
+    public function ProcessforgotPassword(Request $request)
+    {
+
+        $vallidator = Validator::make($request->all(), [
+            "email" => "required|email|exists:users,email",
+        ]);
+
+
+        if ($vallidator->passes()) {
+
+            $token = Str::random(60);
+
+            // delete requested email data if already exist in databaase-----
+            DB::table("password_resets")->where("email", $request->email)->delete();
+
+            // insert ionto password_reset table-------
+            DB::table("password_resets")->insert([
+                "email" => $request->email,
+                "token" => $token,
+                "created_at" => now()
+            ]);
+            // insert ionto password_reset table-------
+
+
+
+
+            // send mail--------
+            $user = User::where('email', $request->email)->first();
+            $formData = [
+                'token' => $token,
+                'user' => $user,
+                'mail_subject' => 'You have requested to reset password'
+            ];
+            Mail::to($request->email)->send(new ResetPasswordEmail($formData));
+            // send mail--------
+
+
+            return redirect()->route("front.forgotpassword")->with("success", "Please check your inbox to reset your password..!!");
+
+        } else {
+            return redirect()->route("front.forgotpassword")->withInput()->withErrors($vallidator->errors());
+        }
+    }
+
+
+
+
+
+
+
+
+
+    public function resetPassword($token)
+    {
+        $tokenExist = DB::table("password_resets")->where("token", $token)->first();
+
+        if ($tokenExist == null) {
+            return redirect()->route("front.forgotpassword")->with("error", "Invalid request");
+        }
+        return view("front.account.resetpassword", ["token" => $token]);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    public function processResetPassword(Request $request)
+    {
+        $token = $request->token;
+
+        $tokenExist = DB::table("password_resets")->where("token", $token)->first();
+
+        if ($tokenExist == null) {
+            return redirect()->route("front.forgotpassword")->with("error", "Invalid request");
+        }
+
+        $user = User::where("email", $tokenExist->email)->first();
+
+        $vallidator = Validator::make($request->all(), [
+            "new_password" => "required|min:5",
+            "confirm_password" => "required|same:new_password",
+        ]);
+
+        if ($vallidator->passes()) {
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+
+            // delete token after reset---------
+            DB::table("password_resets")->where("email", $user->email)->delete();
+            // delete token after reset---------
+
+            return redirect()->route("account.login")->with("success", "You have successfully updated your password..!!");
+
+        } else {
+            return redirect()->route("front.resetPassword", $token)->withErrors($vallidator);
+
+        }
     }
 
 
