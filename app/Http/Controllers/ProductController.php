@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\ProductRating;
 use App\Models\SubCategory;
 use App\Models\TempImage;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class ProductController extends Controller
     {
 
 
-        $product = Product::orderBy("id","asc")->with("product_images");
+        $product = Product::orderBy("id", "asc")->with("product_images");
         // dd($product);
 
         if (!empty($request->get('list_search'))) {
@@ -327,4 +328,54 @@ class ProductController extends Controller
         ]);
 
     }
+
+
+
+
+
+    public function productRatings(Request $request)
+    {
+        $ratings = ProductRating::orderBy("product_ratings.created_at", "Desc");
+        $ratings = $ratings->leftJoin("products", "products.id", "product_ratings.product_id");
+        $ratings = $ratings->select("product_ratings.*", "products.title");
+
+
+
+        // search filter--------
+        if (!empty($request->get('list_search'))) {
+            $ratings = $ratings->where("title", "like", "%" . $request->get('list_search') . "%")
+                ->orWhere("username", "like", "%" . $request->get('list_search') . "%");
+        }
+        // search filter--------
+
+
+
+        $ratings = $ratings->paginate(10);
+        // dd($ratings);
+
+        return view("admin.product.ratings", ["ratings" => $ratings]);
+    }
+
+
+
+
+
+
+
+
+
+    public function changeRatingStatus(Request $request)
+    {
+        $productRating = ProductRating::find($request->productId);
+        $productRating->status = $request->status;
+        $productRating->save();
+
+        session()->flash("success", "Status changed successfully..!!");
+
+        return response()->json([
+            "status" => true,
+        ]);
+    }
+
+
 }

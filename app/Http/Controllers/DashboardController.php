@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\TempImage;
 use App\Models\User;
+use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -47,6 +49,42 @@ class DashboardController extends Controller
             ->sum("grand_total");
 
         // dd($Last30DayTotalRevenue);
+
+
+
+
+
+        // delete temp images here-----------
+
+        // find previous days except today----
+        $dayBeforeToday = Carbon::now()->subDays(1)->format("Y-m-d");
+
+        $tempImages = TempImage::where("created_at", "<=", $dayBeforeToday)->get();
+
+        foreach ($tempImages as $value) {
+            $path = public_path("/temp/" . $value->name);
+            $thumbPath = public_path("/temp/thumb/" . $value->name);
+
+            // delete temp images------
+            if (File::exists($path)) {
+                File::delete($path);
+            }
+            // delete temp images------
+
+            // delete thumb images------
+            if (File::exists($thumbPath)) {
+                File::delete($thumbPath);
+            }
+            // delete thumb images------
+
+            // delete from database-----
+            TempImage::where("id", $value->id)->delete();
+        }
+
+        // delete temp images here-----------
+
+
+
 
         return view("admin.dashboard", [
             "totalOrders" => $totalOrders,

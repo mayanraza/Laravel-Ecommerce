@@ -54,14 +54,25 @@
                             <div class="bg-light right">
                                 <h1>{{ $product->title }}</h1>
                                 <div class="d-flex mb-3">
-                                    <div class="text-primary mr-2">
-                                        <small class="fas fa-star"></small>
-                                        <small class="fas fa-star"></small>
-                                        <small class="fas fa-star"></small>
-                                        <small class="fas fa-star-half-alt"></small>
-                                        <small class="far fa-star"></small>
+                                    <div class="star-rating product mt-1" title="">
+                                        <div class="back-stars">
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+                                            <i class="fa fa-star" aria-hidden="true"></i>
+
+                                            <div class="front-stars"
+                                                style="width: {{ ($ratingAvg / 5) * 100 }}%">
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <small class="pt-1">({{ $product->product_ratings_count }} Reviews)</small>
+                                    <small class="pt-1">({{ $product->product_ratings_count>1?$product->product_ratings_count." Reviews":$product->product_ratings_count." Review" }})</small>
                                 </div>
                                 @if ($product->compare_price > 0)
                                     <h2 class="price text-secondary"><del>${{ $product->compare_price }}</del></h2>
@@ -186,8 +197,8 @@
                                         <div class="col-md-12 mt-5">
                                             <div class="overall-rating mb-3">
                                                 <div class="d-flex">
-                                                    <h1 class="h3 pe-3">4.0</h1>
-                                                    <div class="star-rating mt-2" title="70%">
+                                                    <h1 class="h3 pe-3">{{ $ratingAvg }}</h1>
+                                                    <div class="star-rating mt-2" title="">
                                                         <div class="back-stars">
                                                             <i class="fa fa-star" aria-hidden="true"></i>
                                                             <i class="fa fa-star" aria-hidden="true"></i>
@@ -195,7 +206,8 @@
                                                             <i class="fa fa-star" aria-hidden="true"></i>
                                                             <i class="fa fa-star" aria-hidden="true"></i>
 
-                                                            <div class="front-stars" style="width: 70%">
+                                                            <div class="front-stars"
+                                                                style="width: {{ ($ratingAvg / 5) * 100 }}%">
                                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                                                 <i class="fa fa-star" aria-hidden="true"></i>
@@ -204,7 +216,11 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="pt-2 ps-2">(03 Reviews)</div>
+
+
+                                                    <div class="pt-2 ps-2">
+                                                        ({{ $product->product_ratings_count > 1 ? $product->product_ratings_count . ' Reviews' : $product->product_ratings_count . ' Review' }})
+                                                    </div>
                                                 </div>
 
                                             </div>
@@ -226,7 +242,8 @@
                                                                 <i class="fa fa-star" aria-hidden="true"></i>
                                                                 <i class="fa fa-star" aria-hidden="true"></i>
 
-                                                                <div class="front-stars" style="width: {{$ratingPerc}}%">
+                                                                <div class="front-stars"
+                                                                    style="width: {{ $ratingPerc }}%">
                                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                                     <i class="fa fa-star" aria-hidden="true"></i>
                                                                     <i class="fa fa-star" aria-hidden="true"></i>

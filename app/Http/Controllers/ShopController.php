@@ -139,8 +139,8 @@ class ShopController extends Controller
 
         $product = Product::where("slug", $slug)
             ->withCount("product_ratings")
-            ->withSum("product_ratings","rating")
-            ->with("product_images","product_ratings")
+            ->withSum("product_ratings", "rating")
+            ->with("product_images", "product_ratings")
             ->first();
 
         // dd($product);
@@ -159,10 +159,20 @@ class ShopController extends Controller
                 ->get();
         }
 
+
+        // average rating calculation---------
+        $ratingAvg = "0.00";
+        if ($product->product_ratings_count > 0) {
+            $ratingAvg = number_format(($product->product_ratings_sum_rating / $product->product_ratings_count), 2);
+        }
+        // average rating calculation---------
+
+
+
         return view("front.product", [
             "product" => $product,
             "relatedProduct" => $relatedProduct,
-
+            "ratingAvg" => $ratingAvg,
 
         ]);
 
@@ -193,9 +203,13 @@ class ShopController extends Controller
         }
 
 
-        $count = ProductRating::where("email", $request->email)->count();
+        // check A user can give a review to a product only once 
+        // (by checking its email count && product_id count)------
+        $countEmail = ProductRating::where("email", $request->email)->count();
+        $countProduct = ProductRating::where("product_id", $id)->count();
 
-        if ($count > 0) {
+
+        if ($countEmail > 0 && $countProduct > 0) {
             session()->flash("error", "You already rated thid product..!!");
 
             return response()->json([
